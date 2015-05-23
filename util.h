@@ -43,3 +43,24 @@ typedef struct sala{
     int nivel;
     int prob_monstro;
 }sala;
+
+typedef struct{
+	char op;
+	int num1,num2;
+	float res;
+	char endereco[20];
+}MSG;
+
+typedef struct{
+    char comando[15];
+    char opt[25];
+    char resp[250];
+    char respopt[25];
+    char extra[50];
+    char endereco[20];
+}COMMS;
+
+typedef struct mensagem{
+	char op1, op2;
+    char endereco[20];
+}DATA;

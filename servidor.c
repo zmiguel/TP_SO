@@ -13,7 +13,7 @@ int fd_servidor, fd_cliente;
 int main(void){
     int n;
 
-    MSG msg;
+    COMMS comms;
 
     /* VERIFICAR SE EXISTE "CP" DO SERVIDOR (access) -- APENAS UM!!!*/
     if(access("CPservidor", F_OK)==0){
@@ -29,7 +29,7 @@ int main(void){
 
     do{
             /* RECEBER PEDIDO NA "CP" DO SERVIDOR - MINHA (n = read();) */
-        n = read(fd_servidor, &msg, sizeof(msg));
+        n = read(fd_servidor, &comms, sizeof(comms));
 
         if(n == 0){
             printf("[SERVIDOR] Fiquei sem clientes!\n");
@@ -38,32 +38,17 @@ int main(void){
         }
 
 // CALCULO
-        printf("Recebi um pedido... %d %c %d = 7 (%d bytes)\n", msg.num1, msg.op, msg.num2, n);
+        printf("Recebi um pedido... comando:%s - opt:%s - resp:%s - respopt:%s - extra:%s (%d bytes)\n", comms.comando, comms.opt, comms.resp, comms.respopt, comms.extra, n);
 
-        switch(msg.op){
-            case '+':
-                msg.res = msg.num1 + msg.num2;
-                break;
-            case '-':
-                msg.res = msg.num1 - msg.num2;
-                break;
-            case '*':
-                msg.res = msg.num1 * msg.num2;
-                break;
-            case '/':
-                msg.res = msg.num1 / msg.num2;
-                break;
-        }
-        printf("Vou enviar a respostas... %d %c %d = %.2f (%d bytes)\n", msg.num1, msg.op, msg.num2, msg.res, n);
 
             /* ABRIR "CP" DO CLIENTE (open - O_WRONLY) */
-            fd_cliente = open(msg.endereco, O_WRONLY);
+            fd_cliente = open(comms.endereco, O_WRONLY);
             /* ENVIAR RESPOSTA PARA A "CP" DO CLIENTE (write) */
-            write(fd_cliente, &msg, sizeof(msg));
+            write(fd_cliente, &comms, sizeof(comms));
             /* FECHAR "CP" DO CLIENTE (close) */
             close(fd_cliente);
 
-    }while(!(msg.num1 == 0 && msg.op == '+' && msg.num2 == 0));
+    }while(strcmp(comms.comando, "off")!=0);
 
     /* FECHAR "CP" DO SERVIDOR - MINHA (close) */
     close(fd_servidor);
