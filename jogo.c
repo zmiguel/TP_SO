@@ -4,6 +4,8 @@
 #include <string.h>
 #include <locale.h>
 
+#include "util.h"
+
 //----------JOGO----------------
 void ini_jogo(){
     char opcao;

@@ -59,7 +59,8 @@ int main(void){
 
             printf("Terminei o servidor. Vou embora....\n");
         }
-        else if(strcmp(palavra[0],"calcula")==0){
+        /*ENVIO DE INSTRUCOES DE MOVIMENTO*/
+        else if(strcmp(palavra[0],"mov")==0){
             msg.num1 = atoi(palavra[1]);
             msg.num2 = atoi(palavra[3]);
             msg.op = *palavra[2];

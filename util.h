@@ -4,7 +4,7 @@ typedef struct jogador{
 
 j_princ jogador1 = {20};
 //p_princ jogador2 = {20};
-
+//-------------ESTRUTURA-DE-OBJECTOS---------
 typedef struct objectos{
     char nome[20];
     int peso;
@@ -13,7 +13,7 @@ typedef struct objectos{
     int forca_defesa;
     int max_usos;
 }objecto;
-//------------DECLARACAO-DE-OBJECTOS--------
+//------------DECLARACAO-DE-OBJECTOS---------
 objecto sandes = {"Sandes", 0.5, 10, 0 , 0, 1};
 objecto aspirina = {"Aspirina", 0.1, 20, 0, 0, 1};
 objecto xarope = {"Xarope", 1, 4, 0, 0, 1};
@@ -36,11 +36,10 @@ monst escorpiao = {"Escorpião", 7, 5, 3};
 monst lobisomem = {"Lobisomem", 8, 6, 6};
 monst urso = {"Urso", 10, 10, 8};
 monst boss = {"Boss", 15, 15, 12};
-//----------SALAS---------------------------
+//----------SALAS----------------------------
 typedef struct sala{
     char descricao[100];
     char descricao_monst[100];
     int nivel;
-    int prob_monstro;
     int prob_monstro;
 }sala;
