@@ -13,7 +13,9 @@ int fd_servidor, fd_cliente;
 int main(void){
     int n;
 
-    COMMS comms;
+    DATA data;
+
+    //matrix do labirinto
 
     /* VERIFICAR SE EXISTE "CP" DO SERVIDOR (access) -- APENAS UM!!!*/
     if(access("CPservidor", F_OK)==0){
@@ -29,26 +31,44 @@ int main(void){
 
     do{
             /* RECEBER PEDIDO NA "CP" DO SERVIDOR - MINHA (n = read();) */
-        n = read(fd_servidor, &comms, sizeof(comms));
+        n = read(fd_servidor, &data, sizeof(data));
 
-        if(n == 0){
-            printf("[SERVIDOR] Fiquei sem clientes!\n");
+        if(n != 3){
+            printf("[SERVIDOR] Nao ha jogadores suficientes!\n");
             sleep(1);
             continue;
         }
 
-// CALCULO
-        printf("Recebi um pedido... comando:%s - opt:%s - resp:%s - respopt:%s - extra:%s (%d bytes)\n", comms.comando, comms.opt, comms.resp, comms.respopt, comms.extra, n);
+    //printf com o pedido do cliente
+    printf();
+
+    //main switch
+
+    switch(data.op1){
+    case "mover":
+        if(strcmp(data.op2, "frente")==0){
+
+        }else if(strcmp(data.op2, "tras")==0){
+
+        }else if(strcmp(data.op2, "direita")==0){
+
+        }else if(strcmp(data.op2, "esquerda")==0){
+
+        }else{
+            strcpy(data.resposta, "ERRO! A direcao intruduzida nao e valida!\n");
+        }
+        break;
+    }
 
 
             /* ABRIR "CP" DO CLIENTE (open - O_WRONLY) */
-            fd_cliente = open(comms.endereco, O_WRONLY);
+            fd_cliente = open(data.endereco, O_WRONLY);
             /* ENVIAR RESPOSTA PARA A "CP" DO CLIENTE (write) */
-            write(fd_cliente, &comms, sizeof(comms));
+            write(fd_cliente, &data, sizeof(data));
             /* FECHAR "CP" DO CLIENTE (close) */
             close(fd_cliente);
 
-    }while(strcmp(comms.comando, "off")!=0);
+    }while(PRECISAMOS DE ALGUMA COISA AQUI);
 
     /* FECHAR "CP" DO SERVIDOR - MINHA (close) */
     close(fd_servidor);
