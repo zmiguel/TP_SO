@@ -84,8 +84,8 @@ int main(void){
         /* RECEBER PEDIDO NA "CP" DO SERVIDOR - MINHA (n = read();) */
         n = read(fd_servidor, &msg, sizeof(data));
 
-        if(n == 0){
-            printf("[SERVIDOR] Fiquei sem jogadores!\n");
+        if(n != 3){
+            printf("[SERVIDOR] Não existem jogadores suficientes!\n");
             sleep(1);
             continue;
         }
@@ -126,9 +126,9 @@ int main(void){
         /* FECHAR "CP" DO CLIENTE (close) */
         close(fd_cliente);
     }while(msg.desliga != 1);
-    
+
     printf("[SERVIDOR] SERVIDOR DESLIGADO");
-    
+
     /* FECHAR "CP" DO SERVIDOR - MINHA (close) */
     close(fd_servidor);
     /* REMOVER "CP" DO SERVIDOR- MINHA (UNLINK) */
