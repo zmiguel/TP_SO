@@ -13,10 +13,9 @@ int fd_servidor, fd_cliente;
 
 int main(void){
     char str[80], *palavra[TAM];
-    int i, valida_j;
+    int i;
 
     MENSAGEM msg;
-    EU ent;
     JOG play1;
 
     /* VERIFICAR SE EXISTE "CP" NO SERVIDOR(access) */
@@ -30,28 +29,28 @@ int main(void){
     /* ABRIR "CP" DO SERVIDOR (open - O_WRONLY) */
     fd_servidor = open("CPservidor", O_WRONLY);
 
-    printf("-----BEM-VINDO-----");
+    printf("-----BEM-VINDO-----\n");
     /*
     do{
         printf("\nINTRODUZA O SEU USERNAME:");
-        scanf(" %99[^\n]", ent.nome);
+        scanf(" %[^\n]", play1.nome);
         fflush(stdin);
         printf("INTRODUZA A SUA PASSWORD:");
-        scanf(" %d", &ent.pass);
-        printf("\n%s\n",ent.nome);
-        printf("\n%d",ent.pass);
-        printf("\n%d",ent.perm);
+        scanf("%d", &jog1.passwd);
+        printf("%s\n",jog1.nome);
+        printf("%d",jog1.passwd);
+        printf("%d",jog1.permissao);
         // ENVIAR PEDIDO PARA "CP" DO SERVIDOR (write)
-        write(fd_servidor, &ent, sizeof(ent));
+        write(fd_servidor, &jog1, sizeof(jog1));
         // ABRIR "CP" DO CLIENTE - MINHA (open - O_RDONLY)
         fd_cliente = open(msg.endereco, O_RDONLY);
         // RECEBER RESPOSTA NA "CP" DO CLIENTE - MINHA (read)
-        read(fd_cliente, &ent, sizeof(ent));
-        printf("\n%s\n",ent.nome);
-        printf("\n%d",ent.pass);
+        read(fd_cliente, &jog1, sizeof(jog1));
+        printf("\n%s\n",jog1.nome);
+        printf("\n%d",jog1.passwd);
         // FECHAR "CP" DO CLIENTE - MINHA (close)
         close(fd_cliente);
-        printf("\n%d", ent.perm);
+        printf("\n%d", jog1.permissao);
     */
         do{
             printf("> ");
@@ -68,7 +67,8 @@ int main(void){
                         strcpy(str,"jogar");
                         printf("O jogador 1 não pode desistir!\n");
                     }
-                    else if(strcmp(palavra[0],"desliga")==0){
+                    else if(strcmp(palavra[0],"desligar")==0){
+                        strcpy(msg.op1, "Desligar");
                         /*PEDIDO DE SHUTDOWN DO SERVIDOR*/
                         msg.desliga = 1;
                         /* ENVIAR PEDIDO PARA "CP" DO SERVIDOR (write) */
@@ -83,7 +83,7 @@ int main(void){
                         /*DESLIGAR O CLIENTE*/
                         strcpy(str, "desistir");
 
-                        printf("\nSERVIDOR DESLIGADO\n");
+                        printf("SERVIDOR DESLIGADO\n");
                     }
                     /*ENVIO DE INSTRUCOES DE MOVIMENTO*/
                     else if(strcmp(palavra[0],"mov")==0){
@@ -94,10 +94,11 @@ int main(void){
                         /* ABRIR "CP" DO CLIENTE - MINHA (open - O_RDONLY) */
                         fd_cliente = open(msg.endereco, O_RDONLY);
                         /* RECEBER RESPOSTA NA "CP" DO CLIENTE - MINHA (read) */
+                        read(fd_cliente, &msg, sizeof(msg));
                         read(fd_cliente, &jog1, sizeof(jog1));//ver recebimento.
                         /* FECHAR "CP" DO CLIENTE - MINHA (close) */
                         close(fd_cliente);
-                        printf("\nEstou na posição x:%d, y:%d\n", jog1.posx, jog1.posy);
+                        printf("Estou na posição x = [%d], y = [%d]\n", jog1.posx, jog1.posy);
                     }
                     else if(strcmp(palavra[0],"atac")==0){
                         strcpy(msg.op1, palavra[0]);
@@ -124,10 +125,40 @@ int main(void){
                         close(fd_cliente);
                         //FAZER RECEBIMENTO - PERGUNTAR AO ZÉ A IMPLEMENTACAO
                         //printf("Resultado = %.2f\n", msg.res);//ver recebimento
+                    }else if(strcmp(palavra[0],"verificaritems")==0){
+
+                        strcpy(msg.op1, palavra[0]);
+
+                        /* ENVIAR PEDIDO PARA "CP" DO SERVIDOR (write) */
+                        write(fd_servidor, &msg, sizeof(msg));
+                        /* ABRIR "CP" DO CLIENTE - MINHA (open - O_RDONLY) */
+                        fd_cliente = open(msg.endereco, O_RDONLY);
+                        /* RECEBER RESPOSTA NA "CP" DO CLIENTE - MINHA (read) */
+                        read(fd_cliente, &msg, sizeof(msg));//ver recebimento.
+                        /* FECHAR "CP" DO CLIENTE - MINHA (close) */
+                        close(fd_cliente);
+                        //FAZER RECEBIMENTO - PERGUNTAR AO ZÉ A IMPLEMENTACAO
+                        //printf("Resultado = %.2f\n", msg.res);//ver recebimento
+                    }else if(strcmp(palavra[0],"geraritems")==0){
+
+                        strcpy(msg.op1, palavra[0]);
+
+                        /* ENVIAR PEDIDO PARA "CP" DO SERVIDOR (write) */
+                        write(fd_servidor, &msg, sizeof(msg));
+                        /* ABRIR "CP" DO CLIENTE - MINHA (open - O_RDONLY) */
+                        fd_cliente = open(msg.endereco, O_RDONLY);
+                        /* RECEBER RESPOSTA NA "CP" DO CLIENTE - MINHA (read) */
+                        read(fd_cliente, &msg, sizeof(msg));//ver recebimento.
+                        /* FECHAR "CP" DO CLIENTE - MINHA (close) */
+                        close(fd_cliente);
+                        //FAZER RECEBIMENTO - PERGUNTAR AO ZÉ A IMPLEMENTACAO
+                        printf("%s", msg.frase);//ver recebimento
                     }
+                    else
+                        printf("Comando invalido, tenta novamente!\n");
                 }
         }while(strcmp(str,"desistir")!=0);
-    //}while(ent.perm != 1);
+    //}while(play1.permissao != 1);
     /* FECHAR "CP" DO SERVIDOR (close) */
     close(fd_servidor);
     /* REMOVER "cp" DO CLIENTE - EU (UNLINK) */
